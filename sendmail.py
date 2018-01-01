@@ -1,6 +1,7 @@
 from datetime import date
 import smtplib
 from email.mime.multipart import MIMEMultipart
+from email.mime.application import MIMEApplication
 from email.utils import formatdate
 import os
 
@@ -9,9 +10,9 @@ def main():
     todayFilename = date.today().strftime("%Y-%m-%d") + ".mobi"
     if (os.path.isfile(todayFilename) == True):
         # If so, send it
-        sendMail()
+        sendMail(todayFilename)
 
-def sendMail():
+def sendMail(attachment):
     # Adjust these lines for your mail server setup
     smtpServer = "YOUR SMTP SERVER HERE"
     smtpPort = 587
@@ -31,6 +32,12 @@ def sendMail():
     msg['To'] = messageTo
     msg['Date']= formatdate(localtime = True)
     msg['Subject'] = "NHK News"
+    
+    with open(attachment, "rb") as fil:
+        part = MIMEApplication(fil.read(), Name=os.path.basename(attachment))
+        part['Content-Disposition'] = 'attachment; filename="%s"' % os.path.basename(attachment)
+    msg.attach(part)
+    
     server.sendmail(messageFrom, messageTo, msg.as_string())
 
 main()

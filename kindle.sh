@@ -1,5 +1,5 @@
 #! /bin/sh
 _now=$(date +"%Y-%m-%d")
-python3 nhk-today.py
+/usr/local/bin/python3 nhk-today.py
 ./kindlegen "$_now.opf"
-python3 sendmail.py
+/usr/local/bin/python3 sendmail.py
